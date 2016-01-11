@@ -16,47 +16,45 @@
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
-## The gps config appropriate for this device
-PRODUCT_COPY_FILES += device/common/gps/gps.conf_US_SUPL:system/etc/gps.conf
-
-## (2) Also get non-open-source specific aspects if available
+# Get non-open-source specific aspects if available
 $(call inherit-product-if-exists, vendor/samsung/quincy-common/quincy-common-vendor.mk)
 
-## overlays
+# Overlays
 DEVICE_PACKAGE_OVERLAYS += device/samsung/quincy-common/overlay
 
 # Device uses high-density artwork where available
 PRODUCT_AAPT_CONFIG := normal hdpi xhdpi
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
 
-# Hardware
-PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml 
-
-# S-Pen IDC
-PRODUCT_COPY_FILES += \
-    device/samsung/quincy-common/idc/sec_e-pen.idc:system/usr/idc/sec_e-pen.idc \
-    device/samsung/quincy-common/idc/sec_touchscreen.idc:system/usr/idc/sec_touchscreen.idc    
-
-# Ramdisk
-PRODUCT_PACKAGES += \
-    init.qcom.rc \
-    init.target.rc \
-    ueventd.qcom.rc
-
-# QRNGD
-PRODUCT_PACKAGES += qrngd
-
 # Bootanimation
 TARGET_SCREEN_WIDTH := 800
 TARGET_SCREEN_HEIGHT := 1280
 
-# Common features
+$(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
+
+# System properties
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.sf.lcd_density=320
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.audio.fluence.mode=endfire \
+    persist.audio.vr.enable=false
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.usb.config=mtp,adb
+
+# Enable Chromecast settings support
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.enable.chromecast.mirror=true
+
+# S-Pen IDC
 PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.sensor.barometer.xml:system/etc/permissions/android.hardware.sensor.barometer.xml
+    device/samsung/quincy-common/idc/sec_e-pen.idc:system/usr/idc/sec_e-pen.idc \
+    device/samsung/quincy-common/idc/sec_touchscreen.idc:system/usr/idc/sec_touchscreen.idc
+
+# Ramdisk
+PRODUCT_PACKAGES += \
+    init.target.rc
 
 # common msm8660
 $(call inherit-product, device/samsung/msm8660-common/msm8660.mk)
-
-$(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
-

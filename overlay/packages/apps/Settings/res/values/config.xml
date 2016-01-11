@@ -15,6 +15,6 @@
 -->
 
 <resources>
-    <!-- Enable volume rocker wake -->
+    <!-- quincy: enable volume rocker wake feature -->
     <bool name="config_show_volumeRockerWake">true</bool>
 </resources>
